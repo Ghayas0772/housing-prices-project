@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data & Models
+data/raw/
+data/processed/
+models/
+
+# DVC
+.dvc/cache/
+
+# MLflow
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
