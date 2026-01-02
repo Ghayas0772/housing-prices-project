@@ -1,0 +1,8 @@
+stages:
+  preprocess:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - data/raw/housing_raw.csv
+    - src/data_preprocessing.py
+    outs:
+    - data/processed/housing_processed.csv

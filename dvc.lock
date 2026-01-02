@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - path: data/raw/housing_raw.csv
+      hash: md5
+      md5: fa9fe4cf24f70b69ac65fb33062ddf34
+      size: 1915795
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: 0d9d4e573f80f47be7965c99a096b797
+      size: 520
+    outs:
+    - path: data/processed/housing_processed.csv
+      hash: md5
+      md5: 1de64d7671b87bc1e3ca60109d50129d
+      size: 1910089
