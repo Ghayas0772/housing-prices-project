@@ -23,23 +23,21 @@ jobs:
           pip install "dvc[s3]"
           pip install -r requirements.txt
 
-      - name: Pull Model from S3 via DVC
+      - name: Pull Model from S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # 1. Update the default region here
           AWS_DEFAULT_REGION: us-east-2
         run: |
-          # 2. Update DVC to use the correct region
+          # Configure DVC to use the fresh secrets
           dvc remote modify myremote --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           dvc remote modify myremote --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          # Force the region and path-style for stability
           dvc remote modify myremote region us-east-2
-          
-          # Force DVC to use simple S3 calls
           dvc remote modify myremote --local s3_addressing_style path
-          dvc remote modify myremote --local credentialpath ""
           
-          # Pull the model
+          # Pull the real model files
           dvc pull -v
 
       - name: Verify Model File
