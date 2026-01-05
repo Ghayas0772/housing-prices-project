@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  api:
+    image: housing-price-api
+    container_name: housing-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mlflow
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: mlflow-server
+    ports:
+      - "5000:5000"
+    command: >
+      mlflow server
+      --backend-store-uri /mlruns
+      --default-artifact-root /mlruns
+      --host 0.0.0.0
+    volumes:
+      - ./mlruns:/mlr
