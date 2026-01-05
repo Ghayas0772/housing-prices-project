@@ -29,15 +29,15 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
         run: |
-          # Configure DVC to use the fresh secrets
+          # Configure DVC with ONLY the essential keys and region
           dvc remote modify myremote --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           dvc remote modify myremote --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
-          # Force the region and path-style for stability
           dvc remote modify myremote region us-east-2
-          dvc remote modify myremote --local s3_addressing_style path
           
-          # Pull the real model files
+          # Remove any potential "ghost" configs that might cause errors
+          dvc remote modify myremote --local credentialpath ""
+          
+          # Pull the model files
           dvc pull -v
 
       - name: Verify Model File
