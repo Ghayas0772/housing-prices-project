@@ -2,38 +2,47 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ master ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Debug - List Files
-      # This helps us see if requirements.txt is actually there!
-      run: ls -R
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "dvc[s3]"  # Added s3 support for DVC
+          pip install -r requirements.txt
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        # Install only what we need to verify the code
-        pip install fastapi uvicorn joblib scikit-learn pandas
+      - name: Pull Model from S3 via DVC
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          # Configure DVC to use the GitHub Secrets
+          dvc remote modify myremote --local access_key_id $AWS_ACCESS_KEY_ID
+          dvc remote modify myremote --local secret_access_key $AWS_SECRET_ACCESS_KEY
+          # Pull the actual .pkl files and data
+          dvc pull
 
-    - name: Create Dummy Model
-      run: |
-        mkdir -p models
-        touch models/model.pkl
+      - name: Verify Model File
+        run: |
+          echo "Checking for model files..."
+          ls -lh models/
 
-    - name: Build Docker image
-      run: |
-        docker build -t housing-price-api .
+      - name: Build Docker image
+        run: |
+          docker build -t housing-price-api .
