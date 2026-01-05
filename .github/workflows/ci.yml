@@ -23,23 +23,24 @@ jobs:
           pip install "dvc[s3]"
           pip install -r requirements.txt
 
-      - name: Pull Model from S3
+      - name: Pull Model from S3 via DVC
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # 1. Update the default region here
+          AWS_DEFAULT_REGION: us-east-2
         run: |
-          # 1. Standard config
+          # 2. Update DVC to use the correct region
           dvc remote modify myremote --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           dvc remote modify myremote --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          dvc remote modify myremote region us-east-1
+          dvc remote modify myremote region us-east-2
           
-          # 2. THE MAGIC FIX: Disable "Virtual Hosting" and "Credential Path"
-          # This forces a direct simple connection which usually fixes 403 Forbidden
+          # Force DVC to use simple S3 calls
           dvc remote modify myremote --local s3_addressing_style path
           dvc remote modify myremote --local credentialpath ""
           
-          # 3. Pull with a 'force' to overwrite any local dummy files
-          dvc pull -f -v
+          # Pull the model
+          dvc pull -v
 
       - name: Verify Model File
         run: ls -lh models/
