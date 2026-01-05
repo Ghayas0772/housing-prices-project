@@ -27,18 +27,19 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
         run: |
-          # Configure DVC with specific S3 settings
+          # 1. Standard config
           dvc remote modify myremote --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           dvc remote modify myremote --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           dvc remote modify myremote region us-east-1
           
-          # This helps bypass most 403/Forbidden issues in CI
+          # 2. THE MAGIC FIX: Disable "Virtual Hosting" and "Credential Path"
+          # This forces a direct simple connection which usually fixes 403 Forbidden
+          dvc remote modify myremote --local s3_addressing_style path
           dvc remote modify myremote --local credentialpath ""
           
-          # Pull data with verbose logging to see details if it fails
-          dvc pull -v
+          # 3. Pull with a 'force' to overwrite any local dummy files
+          dvc pull -f -v
 
       - name: Verify Model File
         run: ls -lh models/
