@@ -19,8 +19,14 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Create Dummy Model Folder
-      # This fixes the "Missing File" error because DVC files aren't on GitHub
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Install basic requirements for the build to be recognized
+        pip install fastapi uvicorn joblib scikit-learn pandas httpx pytest
+
+    - name: Create Dummy Model
+      # This creates a blank file so Docker doesn't crash when it looks for model.pkl
       run: |
         mkdir -p models
         touch models/model.pkl
