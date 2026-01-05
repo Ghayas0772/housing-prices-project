@@ -1,0 +1,7 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = s3://housing-prices-2026/housing-prices-project
+    access_key_id = 
+    secret_access_key = 
+    region = us-east-1
