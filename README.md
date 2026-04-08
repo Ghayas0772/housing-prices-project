@@ -52,12 +52,13 @@ housing-prices-project/
 
 ---
 
-## Results
-- Model Performance: *(Add your accuracy / RMSE here)*
-- Metrics tracked using DVC for reproducibility
+## Results & Justification
 
----
+- **Mean Squared Error (MSE):** 0.556  
+- **R² Score:** 0.576  
 
-## Run with Docker
-```bash
-docker-compose up --build
+The model achieves moderate predictive performance, explaining approximately 57.6% of the variance in housing prices. This indicates that the model is able to capture key patterns in the dataset, while still leaving room for improvement.
+
+Given the complexity of housing price prediction and potential limitations in feature representation, this result serves as a solid baseline model.
+
+Further improvements can be achieved through advanced feature engineering, hyperparameter tuning, and the use of more complex models such as ensemble methods.
