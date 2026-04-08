@@ -30,17 +30,16 @@ The project also integrates **MLOps practices** using DVC and Docker to ensure r
 
 ## Project Structure
 housing-prices-project/
-│
-├── data/ # Raw and processed data (tracked with DVC)
-├── src/ # Source code (data processing, training, etc.)
-├── config/ # Configuration files
-├── metrics/ # Model evaluation metrics
-├── dvc.yaml # DVC pipeline definition
-├── params.yaml # Parameters for training
-├── Dockerfile # Docker configuration
-├── docker-compose.yml # Multi-container setup
-├── requirements.txt # Dependencies
-└── README.md
+- data/ # Raw and processed data (tracked with DVC)
+- src/ # Source code (data processing, training, etc.)
+- config/ # Configuration files
+- metrics/ # Model evaluation metrics
+- dvc.yaml # DVC pipeline definition
+- params.yaml # Parameters for training
+- Dockerfile # Docker configuration
+- docker-compose.yml # Multi-container setup
+- requirements.txt # Dependencies
+- README.md
 ---
 
 ## ⚙️ Pipeline Workflow
